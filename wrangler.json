@@ -16,6 +16,12 @@
 			"bucket_name": "astro-blog-emdash-media"
 		}
 	],
+	"kv_namespaces": [
+		{
+			"binding": "SESSION",
+			"id": "7fbb2080a6c144d7895b6180efa3a214"
+		}
+	],
 	"triggers": {
 		"crons": ["* * * * *"]
 	},
