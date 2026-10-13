@@ -200,3 +200,9 @@ dist
 
 ### Astro ###
 .astro/
+
+### EmDash ###
+.emdash/migrations.json
+uploads
+data.db
+data.db-*

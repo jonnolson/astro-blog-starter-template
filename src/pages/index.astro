@@ -1,49 +1,321 @@
 ---
+// Rendered on demand so content edits in EmDash (admin UI or MCP) show up without a rebuild.
+import { getEmDashCollection, getEmDashEntry } from 'emdash';
+import { Image, PortableText } from 'emdash/ui';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+// All homepage copy lives in the single "home" entry of the `homepage` collection
+const { entry: home, cacheHint: homeCacheHint } = await getEmDashEntry('homepage', 'home');
+
+const { entries: posts, cacheHint: postsCacheHint } = await getEmDashCollection('posts', {
+	status: 'published',
+	orderBy: { published_at: 'desc' },
+	limit: home?.data.posts_count || 3,
+});
+
+if (Astro.cache?.enabled) {
+	Astro.cache.set(homeCacheHint);
+	Astro.cache.set(postsCacheHint);
+}
+
+const services = home?.data.services ?? [];
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={SITE_TITLE} description={home?.data.hero_subheading || SITE_DESCRIPTION} />
+		<style>
+			main.home {
+				width: 1080px;
+			}
+			section {
+				padding: 3em 0;
+			}
+			section + section {
+				border-top: 1px solid rgb(var(--gray-light));
+			}
+			.section-intro {
+				color: rgb(var(--gray));
+				max-width: 40em;
+			}
+			.button {
+				display: inline-block;
+				padding: 0.6em 1.4em;
+				border-radius: 999px;
+				background: var(--accent);
+				color: white;
+				font-weight: 700;
+				text-decoration: none;
+			}
+			.button:hover {
+				background: var(--accent-dark);
+				color: white;
+			}
+
+			/* Hero */
+			.hero {
+				display: grid;
+				grid-template-columns: 1.1fr 1fr;
+				gap: 2.5em;
+				align-items: center;
+				padding-top: 1em;
+			}
+			.eyebrow {
+				margin: 0 0 0.5em;
+				color: var(--accent);
+				font-weight: 700;
+				font-size: 0.8em;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+			}
+			.hero h1 {
+				font-size: 2.8em;
+			}
+			.hero-sub {
+				font-size: 1.1em;
+				color: rgb(var(--gray-dark));
+			}
+			.hero-media img {
+				display: block;
+				width: 100%;
+				border-radius: 16px;
+				box-shadow: var(--box-shadow);
+			}
+
+			/* Services */
+			.services-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+				gap: 1.25em;
+				margin-top: 1.5em;
+			}
+			.service {
+				padding: 1.25em;
+				border-radius: 12px;
+				background: white;
+				box-shadow: 0 2px 8px rgba(var(--black), 6%);
+			}
+			.service-icon {
+				font-size: 1.8em;
+				line-height: 1;
+			}
+			.service h3 {
+				font-size: 1.15em;
+				margin: 0.6em 0 0.3em;
+			}
+			.service p {
+				margin: 0;
+				font-size: 0.9em;
+				color: rgb(var(--gray));
+			}
+
+			/* Blog posts */
+			.posts-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+				gap: 1.5em;
+				margin-top: 1.5em;
+			}
+			.post-card a {
+				display: block;
+				color: inherit;
+				text-decoration: none;
+			}
+			.post-card img {
+				display: block;
+				width: 100%;
+				aspect-ratio: 1200 / 630;
+				object-fit: cover;
+				margin-bottom: 0.6em;
+				transition: box-shadow 0.2s ease;
+			}
+			.post-card a:hover img {
+				box-shadow: var(--box-shadow);
+			}
+			.post-card a:hover h3 {
+				color: var(--accent);
+			}
+			.post-card h3 {
+				font-size: 1.2em;
+			}
+			.post-date {
+				margin: 0;
+				font-size: 0.8em;
+				color: rgb(var(--gray));
+			}
+			.post-excerpt {
+				margin: 0.3em 0 0;
+				font-size: 0.9em;
+			}
+
+			/* About */
+			.about {
+				display: grid;
+				grid-template-columns: 1fr 1.2fr;
+				gap: 2.5em;
+				align-items: center;
+			}
+			.about-media img {
+				display: block;
+				width: 100%;
+				border-radius: 16px;
+			}
+
+			.empty {
+				padding: 2em;
+				border: 2px dashed rgb(var(--gray-light));
+				border-radius: 12px;
+				text-align: center;
+			}
+
+			@media (max-width: 720px) {
+				.hero,
+				.about {
+					grid-template-columns: 1fr;
+				}
+				.hero h1 {
+					font-size: 2.1em;
+				}
+				section {
+					padding: 2em 0;
+				}
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Big Poppa!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to <a href="https://docs.astro.build/"
-					>read the docs
-				</a> or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out <a
-					href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template
-				</a> by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+		<main class="home">
+			{
+				!home ? (
+					<div class="empty">
+						<h1>No homepage content yet</h1>
+						<p>
+							Create an entry with the slug <code>home</code> in the Homepage collection.
+						</p>
+						<a class="button" href="/_emdash/admin">
+							Open EmDash admin
+						</a>
+					</div>
+				) : (
+					<>
+						<section class="hero" id="hero">
+							<div>
+								{home.data.hero_eyebrow && (
+									<p class="eyebrow" {...home.edit.hero_eyebrow}>
+										{home.data.hero_eyebrow}
+									</p>
+								)}
+								<h1 {...home.edit.hero_heading}>{home.data.hero_heading}</h1>
+								{home.data.hero_subheading && (
+									<p class="hero-sub" {...home.edit.hero_subheading}>
+										{home.data.hero_subheading}
+									</p>
+								)}
+								{home.data.hero_cta_label && home.data.hero_cta_url && (
+									<a class="button" href={home.data.hero_cta_url} {...home.edit.hero_cta_label}>
+										{home.data.hero_cta_label}
+									</a>
+								)}
+							</div>
+							{home.data.hero_image && (
+								<div class="hero-media" {...home.edit.hero_image}>
+									<Image image={home.data.hero_image} loading="eager" />
+								</div>
+							)}
+						</section>
+
+						<section id="services">
+							{home.data.services_heading && (
+								<h2 {...home.edit.services_heading}>{home.data.services_heading}</h2>
+							)}
+							{home.data.services_intro && (
+								<p class="section-intro" {...home.edit.services_intro}>
+									{home.data.services_intro}
+								</p>
+							)}
+							<div class="services-grid" {...home.edit.services}>
+								{services.map((service) => (
+									<div class="service">
+										{service.icon && (
+											<div class="service-icon" aria-hidden="true">
+												{service.icon}
+											</div>
+										)}
+										<h3>{service.title}</h3>
+										{service.description && <p>{service.description}</p>}
+									</div>
+								))}
+							</div>
+						</section>
+
+						<section id="blog">
+							{home.data.posts_heading && (
+								<h2 {...home.edit.posts_heading}>{home.data.posts_heading}</h2>
+							)}
+							{home.data.posts_intro && (
+								<p class="section-intro" {...home.edit.posts_intro}>
+									{home.data.posts_intro}
+								</p>
+							)}
+							{posts.length === 0 ? (
+								<p class="empty">
+									No posts yet. <a href="/_emdash/admin/content/posts/new">Write the first one</a>.
+								</p>
+							) : (
+								<div class="posts-grid">
+									{posts.map((post) => (
+										<article class="post-card">
+											<a href={`/posts/${post.id}/`}>
+												{post.data.featured_image && <Image image={post.data.featured_image} />}
+												{post.data.publishedAt && (
+													<p class="post-date">
+														<time datetime={post.data.publishedAt.toISOString()}>
+															{post.data.publishedAt.toLocaleDateString('en-us', {
+																year: 'numeric',
+																month: 'short',
+																day: 'numeric',
+															})}
+														</time>
+													</p>
+												)}
+												<h3>{post.data.title}</h3>
+												{post.data.excerpt && <p class="post-excerpt">{post.data.excerpt}</p>}
+											</a>
+										</article>
+									))}
+								</div>
+							)}
+						</section>
+
+						<section class="about" id="about">
+							{home.data.about_image && (
+								<div class="about-media" {...home.edit.about_image}>
+									<Image image={home.data.about_image} />
+								</div>
+							)}
+							<div>
+								{home.data.about_heading && (
+									<h2 {...home.edit.about_heading}>{home.data.about_heading}</h2>
+								)}
+								{home.data.about_body && (
+									<div {...home.edit.about_body}>
+										<PortableText value={home.data.about_body} />
+									</div>
+								)}
+								{home.data.about_cta_label && home.data.about_cta_url && (
+									<a class="button" href={home.data.about_cta_url} {...home.edit.about_cta_label}>
+										{home.data.about_cta_label}
+									</a>
+								)}
+							</div>
+						</section>
+					</>
+				)
+			}
 		</main>
 		<Footer />
 	</body>

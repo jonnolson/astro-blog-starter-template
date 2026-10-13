@@ -1,0 +1,72 @@
+---
+// EmDash blog posts (the Markdown posts in src/content/blog/ are still served under /blog/)
+import { getEmDashEntry } from 'emdash';
+import { Image, PortableText } from 'emdash/ui';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+const { slug } = Astro.params;
+if (!slug) return Astro.rewrite('/404');
+
+const { entry: post, cacheHint } = await getEmDashEntry('posts', slug);
+if (!post) return Astro.rewrite('/404');
+
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={post.data.title} description={post.data.excerpt ?? ''} />
+		<style>
+			.hero-image img {
+				display: block;
+				width: 100%;
+				border-radius: 12px;
+				box-shadow: var(--box-shadow);
+			}
+			.title {
+				padding: 1em 0;
+				text-align: center;
+				line-height: 1;
+			}
+			.title h1 {
+				margin: 0 0 0.5em 0;
+			}
+			.date {
+				margin-bottom: 0.5em;
+				color: rgb(var(--gray));
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<article>
+				{
+					post.data.featured_image && (
+						<div class="hero-image" {...post.edit.featured_image}>
+							<Image image={post.data.featured_image} loading="eager" />
+						</div>
+					)
+				}
+				<div class="title">
+					{
+						post.data.publishedAt && (
+							<div class="date">
+								<FormattedDate date={post.data.publishedAt} />
+							</div>
+						)
+					}
+					<h1 {...post.edit.title}>{post.data.title}</h1>
+					<hr />
+				</div>
+				<div class="prose" {...post.edit.content}>
+					<PortableText value={post.data.content ?? []} />
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>

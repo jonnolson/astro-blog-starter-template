@@ -1,0 +1,251 @@
+{
+	"$schema": "https://emdashcms.com/seed.schema.json",
+	"version": "1",
+	"meta": {
+		"name": "Growww Sample Site",
+		"description": "Sample homepage content model (hero, services, blog posts, about) for testing remote MCP AI edits"
+	},
+	"settings": {
+		"title": "Growww",
+		"tagline": "Websites that grow with you"
+	},
+	"collections": [
+		{
+			"slug": "homepage",
+			"label": "Homepage",
+			"labelSingular": "Homepage",
+			"description": "Content for the site homepage. There is a single entry with the slug \"home\".",
+			"supports": ["drafts", "revisions"],
+			"fields": [
+				{ "slug": "title", "label": "Internal Title", "type": "string", "required": true },
+
+				{ "slug": "hero_eyebrow", "label": "Hero: Eyebrow", "type": "string" },
+				{ "slug": "hero_heading", "label": "Hero: Heading", "type": "string", "required": true, "searchable": true },
+				{ "slug": "hero_subheading", "label": "Hero: Subheading", "type": "text", "searchable": true },
+				{ "slug": "hero_cta_label", "label": "Hero: Button Label", "type": "string" },
+				{ "slug": "hero_cta_url", "label": "Hero: Button Link", "type": "string" },
+				{ "slug": "hero_image", "label": "Hero: Image", "type": "image" },
+
+				{ "slug": "services_heading", "label": "Services: Heading", "type": "string" },
+				{ "slug": "services_intro", "label": "Services: Intro", "type": "text", "searchable": true },
+				{
+					"slug": "services",
+					"label": "Services: Items",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{ "slug": "icon", "label": "Icon (emoji)", "type": "string" },
+							{ "slug": "title", "label": "Title", "type": "string", "required": true },
+							{ "slug": "description", "label": "Description", "type": "text" }
+						]
+					}
+				},
+
+				{ "slug": "posts_heading", "label": "Blog Posts: Heading", "type": "string" },
+				{ "slug": "posts_intro", "label": "Blog Posts: Intro", "type": "text" },
+				{ "slug": "posts_count", "label": "Blog Posts: Number to Show", "type": "integer" },
+
+				{ "slug": "about_heading", "label": "About: Heading", "type": "string" },
+				{ "slug": "about_body", "label": "About: Body", "type": "portableText", "searchable": true },
+				{ "slug": "about_image", "label": "About: Image", "type": "image" },
+				{ "slug": "about_cta_label", "label": "About: Button Label", "type": "string" },
+				{ "slug": "about_cta_url", "label": "About: Button Link", "type": "string" }
+			]
+		},
+		{
+			"slug": "posts",
+			"label": "Posts",
+			"labelSingular": "Post",
+			"supports": ["drafts", "revisions", "search", "seo"],
+			"fields": [
+				{ "slug": "title", "label": "Title", "type": "string", "required": true, "searchable": true },
+				{ "slug": "featured_image", "label": "Featured Image", "type": "image" },
+				{ "slug": "excerpt", "label": "Excerpt", "type": "text", "searchable": true },
+				{ "slug": "content", "label": "Content", "type": "portableText", "searchable": true }
+			]
+		},
+		{
+			"slug": "pages",
+			"label": "Pages",
+			"labelSingular": "Page",
+			"supports": ["drafts", "revisions", "search"],
+			"fields": [
+				{ "slug": "title", "label": "Title", "type": "string", "required": true, "searchable": true },
+				{ "slug": "content", "label": "Content", "type": "portableText", "searchable": true }
+			]
+		}
+	],
+	"content": {
+		"homepage": [
+			{
+				"id": "home",
+				"slug": "home",
+				"status": "published",
+				"data": {
+					"title": "Homepage",
+					"hero_eyebrow": "Design · Build · Grow",
+					"hero_heading": "Websites that grow with your business",
+					"hero_subheading": "We design, build and look after fast, friendly websites for small teams, so you can spend less time wrestling with tech and more time doing what you love.",
+					"hero_cta_label": "See what we do",
+					"hero_cta_url": "#services",
+					"hero_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&h=900&fit=crop",
+							"alt": "A bright, modern office workspace",
+							"filename": "hero-office.jpg"
+						}
+					},
+					"services_heading": "What we do",
+					"services_intro": "Everything you need to get online and keep growing, from a single landing page to a full content-managed site.",
+					"services": [
+						{
+							"icon": "🎨",
+							"title": "Web Design",
+							"description": "Clean, accessible designs that reflect your brand and turn visitors into customers."
+						},
+						{
+							"icon": "⚡",
+							"title": "Development",
+							"description": "Lightning-fast sites built with Astro and deployed to the edge on Cloudflare."
+						},
+						{
+							"icon": "✍️",
+							"title": "Content Management",
+							"description": "Edit your site yourself with EmDash, or let an AI assistant make updates for you."
+						},
+						{
+							"icon": "📈",
+							"title": "SEO & Growth",
+							"description": "Search-friendly structure, analytics and ongoing improvements to help you get found."
+						}
+					],
+					"posts_heading": "From the blog",
+					"posts_intro": "Tips, updates and behind-the-scenes notes from our team.",
+					"posts_count": 3,
+					"about_heading": "About us",
+					"about_body": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{ "_type": "span", "text": "Growww is a small studio of designers and developers who believe a great website should be " },
+								{ "_type": "span", "text": "simple to run", "marks": ["strong"] },
+								{ "_type": "span", "text": ", not just nice to look at." }
+							]
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{ "_type": "span", "text": "We've helped cafés, consultants and community groups launch sites they're proud of, and we stick around afterwards to help them grow." }
+							]
+						}
+					],
+					"about_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=800&fit=crop",
+							"alt": "A small team collaborating around a table",
+							"filename": "about-team.jpg"
+						}
+					},
+					"about_cta_label": "Get in touch",
+					"about_cta_url": "mailto:hello@example.com"
+				}
+			}
+		],
+		"posts": [
+			{
+				"id": "post-welcome",
+				"slug": "welcome-to-growww",
+				"status": "published",
+				"data": {
+					"title": "Welcome to Growww",
+					"excerpt": "A quick hello, and a look at what we're building with Astro and EmDash.",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&h=630&fit=crop",
+							"alt": "A laptop and notebook on a desk",
+							"filename": "welcome.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [{ "_type": "span", "text": "Welcome to our new site! It's built with Astro and managed with EmDash, so every word on the homepage can be edited from the admin panel, or by an AI assistant over MCP." }]
+						},
+						{
+							"_type": "block",
+							"style": "h2",
+							"children": [{ "_type": "span", "text": "What's next" }]
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [{ "_type": "span", "text": "We'll be sharing tips on design, performance and running a small business online. Stay tuned." }]
+						}
+					]
+				}
+			},
+			{
+				"id": "post-fast-sites",
+				"slug": "why-fast-websites-win",
+				"status": "published",
+				"data": {
+					"title": "Why fast websites win",
+					"excerpt": "Speed isn't just a nice-to-have. It affects your search ranking, conversions and how visitors feel about your brand.",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=630&fit=crop",
+							"alt": "Analytics charts on a laptop screen",
+							"filename": "fast-sites.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [{ "_type": "span", "text": "Every extra second a page takes to load costs you visitors. Shipping less JavaScript and serving pages from the edge keeps things snappy." }]
+						},
+						{
+							"_type": "block",
+							"style": "blockquote",
+							"children": [{ "_type": "span", "text": "The fastest code is the code you never send to the browser." }]
+						}
+					]
+				}
+			},
+			{
+				"id": "post-ai-editing",
+				"slug": "editing-your-site-with-ai",
+				"status": "published",
+				"data": {
+					"title": "Editing your site with AI",
+					"excerpt": "How structured content fields make it easy for an AI assistant to update your website safely.",
+					"featured_image": {
+						"$media": {
+							"url": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=630&fit=crop",
+							"alt": "Abstract illustration of artificial intelligence",
+							"filename": "ai-editing.jpg"
+						}
+					},
+					"content": [
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [{ "_type": "span", "text": "Because our homepage is broken into clearly named fields (hero, services, blog and about), an AI assistant connected over MCP can change exactly one thing, like the hero heading, without touching anything else." }]
+						},
+						{
+							"_type": "block",
+							"style": "normal",
+							"children": [
+								{ "_type": "span", "text": "Try asking: " },
+								{ "_type": "span", "text": "\"Change the homepage hero heading to something more playful.\"", "marks": ["em"] }
+							]
+						}
+					]
+				}
+			}
+		]
+	}
+}
